@@ -7,9 +7,15 @@ import {
   messagesServiceProvidersMock,
   updateMessageParams,
 } from './mocks/messages.service.mocks';
-
 import { Message, MessageDocument } from '@/schemas/messages.schema';
 import { Model } from 'mongoose';
+
+const constantUuid = 'uuid';
+jest.mock('node:crypto', () => {
+  return {
+    randomUUID: () => constantUuid,
+  };
+});
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -51,11 +57,17 @@ describe('MessagesService', () => {
   });
 
   it('should create a message', async () => {
-    messageModelCreateMock.mockResolvedValueOnce(createMessageParams);
+    messageModelCreateMock.mockResolvedValueOnce({
+      ...createMessageParams,
+      uuid: constantUuid,
+    });
 
     const result = await service.create(createMessageParams);
-    expect(result).toEqual(createMessageParams);
-    expect(messageModelCreateMock).toHaveBeenCalledWith(createMessageParams);
+    expect(result).toEqual({ ...createMessageParams, uuid: constantUuid });
+    expect(messageModelCreateMock).toHaveBeenCalledWith({
+      ...createMessageParams,
+      uuid: constantUuid,
+    });
   });
 
   it('should find all messages', async () => {
