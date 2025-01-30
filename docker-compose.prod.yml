@@ -1,0 +1,27 @@
+services:
+  # app service for your backend
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile.production
+    env_file: .env
+    environment:
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+
+  # start the mongodb service as container
+  database:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
