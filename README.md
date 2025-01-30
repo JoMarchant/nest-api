@@ -40,6 +40,12 @@ $ docker-compose run --rm api npm run test:cov
 
 ## API
 
+### /
+
+#### GET
+
+Obtiene un mensaje de bienvenida.
+
 ### /messages
 
 Algunos endpoint que dispone la API.
